@@ -9,3 +9,4 @@ __pycache__/
 # IDE / Editor specific
 .vscode/
 .idea/
+data/NationalNames.csv
