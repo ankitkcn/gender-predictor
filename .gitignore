@@ -1,0 +1,11 @@
+# Virtual Environment
+venv/
+__pycache__/
+*.pyc
+
+# Data files (optional, if your data is too large for Git)
+# data/
+
+# IDE / Editor specific
+.vscode/
+.idea/
