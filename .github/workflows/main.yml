@@ -1,0 +1,49 @@
+# This is the name of our workflow. It will be displayed in the Actions tab of the GitHub repository.
+name: CI-CD Pipeline for Gender Predictor
+
+# This section defines the trigger for the workflow.
+# We want this to run every time there is a 'push' to the 'main' branch.
+on:
+  push:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel.
+jobs:
+  # This is the name of our single job. You can name it anything.
+  build-and-push-docker-image:
+    # The type of runner that the job will run on. We use the latest version of Ubuntu.
+    runs-on: ubuntu-latest
+
+    # A job is a sequence of steps.
+    steps:
+      # Step 1: Check out the repository code
+      # This action checks out your repository under $GITHUB_WORKSPACE, so your job can access it.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Log in to the GitHub Container Registry (GHCR)
+      # This uses the Personal Access Token we stored as a secret to authenticate.
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          # GITHUB_ACTOR is the username of the account that initiated the workflow.
+          username: ${{ github.actor }}
+          # The secret token we created earlier.
+          password: ${{ secrets.GHCR_PAT }}
+
+      # Step 3: Build the Docker image and push it to GHCR
+      # This is the core step of our CI/CD pipeline.
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          # The context is the build's context path (our project root).
+          context: .
+          # Push the image to the registry after building.
+          push: true
+          # Define the tags for the image.
+          # We create two tags: one with the specific commit SHA and one as 'latest'.
+          # ghcr.io/OWNER/IMAGE_NAME:tag
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/gender-predictor:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/gender-predictor:latest
