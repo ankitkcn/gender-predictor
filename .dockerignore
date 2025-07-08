@@ -1,0 +1,17 @@
+# Ignore the Dockerfile itself and git files
+Dockerfile
+.dockerignore
+.git
+.gitignore
+
+# Ignore the Python virtual environment
+venv/
+__pycache__/
+
+# Ignore notebooks and raw data, they aren't needed in the final app
+notebooks/
+data/NationalNames.csv
+
+# Ignore editor/IDE specific files
+.vscode/
+.idea/
